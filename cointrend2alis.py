@@ -22,17 +22,20 @@ class alisClient:
 
     headers = ''
 
-    def Post(self, title, doc, tag):
+    def Post(self, title, doc):
         url = self.URL_SERVER + '/me/articles/drafts'
-        body = {"title":title, "body": doc, "overview": tag}
+        body = {"title":title, "body": doc, "overview": ""}
         json_data = json.dumps(body).encode("utf-8")
 
         ret = self.__req("POST", url, json_data)
         return ret['article_id']
 
-    def Publish(article_id):
+    def Publish(article_id, topic, tags):
         url = self.URL_SERVER + '/me/articles/' + article_id + '/drafts/publish'
-        self.__req("PUT", url)
+        body = {"topic":topic, "tags": tags}
+        json_data = json.dumps(body).encode("utf-8")
+
+        self.__req("PUT", url, json_data)
 
     def __init__(self, user, pwd):
         self.__auth(user, pwd)
@@ -107,7 +110,6 @@ if __name__ == '__main__':
     t_end = datetime.datetime.now() - datetime.timedelta(hours=10)
     t_7days_ago = t_end - datetime.timedelta(days=7)
 
-    """
     trends = []
     no_trends = []
     cnt = 0
@@ -125,41 +127,51 @@ if __name__ == '__main__':
     no_trends = sorted(no_trends, key=lambda x: x['symbol'], reverse=False)
 
 
-
+    doc_rank_trends = ''
+        print('avg: ' + str(trend['avg']))
     cnt = 0
     for trend in trends:
         if SIZE_PRINT_LIMIT < cnt:
             break
         cnt+=1
-        print('symbol: ' + trend['symbol'])
-        print('url: ' + doc_GOOGLE_TRENDS_URL + trend['symbol'])
-        print('avg: ' + str(trend['avg']))
 
-    print("no trend:" + str(no_trends))
-    """
+        doc_rank_trends += '<p>第' + str(cnt) + ' 位: ' + trend['symbol']
+        doc_rank_trends += '(<a href="' + doc_GOOGLE_TRENDS_URL + trend['symbol'] + '">Googleトレンドで見る</a>)<br>'
+        doc_rank_trends += '期間内最新3つの平均値: ' + str(trend['avg']) + '<br>'
+        doc_rank_trends += '期間内最新値: ' + str(trend['last']) + '</p>'
+
+    doc_no_trends = '<p>'
+    for no_trend in no_trends:
+        doc_no_trends += ' - ' + no_trend['symbol'] + '<br>'
+    doc_no_trends += '</p>'
+
     fmt = '%Y/%m/%d %H時台'
     t_str_st = t_7days_ago.strftime(fmt)
     t_str_et = t_end.strftime(fmt)
     doc = """
-<p>こんにちは。hinoshiba の <a href="https://github.com/hinoshiba/cointrend">bot</a>です。</p>
+<p>こんにちは。hinoshiba の <a href="https://github.com/hinoshiba/cointrend/blob/master/cointrend2alis.py">bot</a>です。</p>
 <p>本記事は、BINANCEで利用できる、暗号資産名を、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド(日本の範囲)</a>で検索し、日本人の興味が上昇している暗号資産名をレポートする記事です。</p>
-<p>今回の記事では、""" + t_str_st + """から""" + t_str_et + """の間に日本で上昇した暗号資産名をレポートしています</p>
-<h2>ランキング (上位5つ)</h2>
-<h2>トレンド に乗っていない通貨名</h2>
-<h2>トレンドには意味があるのか。</h2>
-<p>暗号資産の取引も、多数決ゲームと言われることがあるように、世間の注目度を追いかけることも大切です。</p>
-<p>その判断材料の1つとして、検索トレンドが利用できるかと思っています。</p>
-<p>1例を出すと、2021/04/14 に、IOST が急上昇したイベントがありました。<br> その1週間前である 2021/04/06 - 2021/04/13 をGoogleトレンドで検索していただくとわかるように、注目度が上がっています。</p>
-<p>このことから、検索トレンドが情報している暗号資産名は、今後動きのある通貨である可能性を判断する材料の1つとして使えることがわかると思います。</p>
 <h2>本活動を支援してくれる場合</h2>
 <p>どの記事でも良いのでAlis投げてください</p>
 <h2>注意事項や連絡</h2>
-<p> - 本記事を参考にいただくのは自己責任です</p>
-<p> - BINANCE取引所から一覧を取得しています。対象通貨を活用する場合、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録し 5%の手数料を獲得</a>をしてみてください</p>
+<p> - 本記事を参考にいただくのは自己責任です<br>
+ - 値は、0-100です。詳細は、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド</a>をみてください<br>
+ - BINANCE取引所から一覧を取得しています。対象通貨を活用する場合、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録し 5%の手数料を獲得</a>をしてみてください</p>
+<h2>注目度上昇ランキング (上位""" + str(SIZE_PRINT_LIMIT) + """つ)</h2>
+<p>今回の記事では、""" + t_str_st + """から""" + t_str_et + """の間に日本で上昇した暗号資産名をレポートしています</p>""" + doc_rank_trends + """
+<h3>トレンド に値がなかった通貨名</h3>""" + doc_no_trends + """
+<h2>トレンドには意味があるのか。</h2>
+<p>暗号資産の取引も、多数決ゲームと言われることがあるように、世間の注目度を追いかけることも大切です。</p>
+<p>その判断材料の1つとして、検索トレンドが利用できるかと思っています。</p>
+<p>例えば、2021/04/14 - 2021/04/15 に、IOST が急上昇したイベントがありました。<br> その1週間前までの <a href="https://trends.google.co.jp/trends/explore?date=2021-04-07%202021-04-14&geo=JP&q=IOST">2021/04/07 - 2021/04/14 をGoogleトレンドで検索</a> していただくとわかるように、注目度が上がっていることがわかります。</p>
+<p>このことからも、検索トレンドが情報している暗号資産名は、今後動きのある通貨である可能性を判断する材料の1つとして使えることがわかると思います。</p>
+<p>上がりそうなトレンドに乗るもよし、まだ注目が集まっていない"トレンドに値がなかった通貨名" に目を光らせておくのもよし。色々な思考材料に使えるのかと、個人的には夢を膨らませています</p>
+
     """
+    title = "[テスト記事] 暗号資産トレンドレポート: " + t_str_et + "までの推移"
     ac = alisClient(uname, pwd)
-    article_id = ac.Post("test", doc, "")
+    article_id = ac.Post(title, doc)
     print(article_id)
-    #ac.Publish(article_id)
+    ac.Publish(article_id, 'crypto', ['ビットコイン', 'bitcoin', '仮想通貨', 'トレンド'])
 
 
