@@ -30,7 +30,7 @@ class alisClient:
         ret = self.__req("POST", url, json_data)
         return ret['article_id']
 
-    def Publish(article_id, topic, tags):
+    def Publish(self, article_id, topic, tags):
         url = self.URL_SERVER + '/me/articles/' + article_id + '/drafts/publish'
         body = {"topic":topic, "tags": tags}
         json_data = json.dumps(body).encode("utf-8")
@@ -134,9 +134,9 @@ if __name__ == '__main__':
             break
         cnt+=1
 
-        doc_rank_trends += '<p>第' + str(cnt) + ' 位: ' + trend['symbol']
-        doc_rank_trends += '(<a href="' + doc_GOOGLE_TRENDS_URL + trend['symbol'] + '">Googleトレンドで見る</a>)<br>'
-        doc_rank_trends += '期間内最新3つの平均値: ' + str(trend['avg']) + '<br>'
+        doc_rank_trends += '<h3>第 ' + str(cnt) + ' 位: ' + trend['symbol']
+        doc_rank_trends += '(<a href="' + doc_GOOGLE_TRENDS_URL + trend['symbol'] + '">Googleトレンドで見る</a>)</h3>'
+        doc_rank_trends += '<p>期間内最新3つの平均値: ' + str(trend['avg']) + '<br>'
         doc_rank_trends += '期間内最新値: ' + str(trend['last']) + '</p>'
 
     doc_no_trends = '<p>'
@@ -157,7 +157,7 @@ if __name__ == '__main__':
  - 値は、0-100です。詳細は、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド</a>をみてください<br>
  - BINANCE取引所から一覧を取得しています。対象通貨を活用する場合、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録し 5%の手数料を獲得</a>をしてみてください</p>
 <h2>注目度上昇ランキング (上位""" + str(SIZE_PRINT_LIMIT) + """つ)</h2>
-<p>今回の記事では、""" + t_str_st + """から""" + t_str_et + """の間に日本で上昇した暗号資産名をレポートしています</p>""" + doc_rank_trends + """
+<p>今回の記事では、<strong>""" + t_str_st + """から""" + t_str_et + """の間</strong>に、日本で上昇した暗号資産名をレポートしています</p>""" + doc_rank_trends + """
 <h3>トレンド に値がなかった通貨名</h3>""" + doc_no_trends + """
 <h2>トレンドには意味があるのか。</h2>
 <p>暗号資産の取引も、多数決ゲームと言われることがあるように、世間の注目度を追いかけることも大切です。</p>
