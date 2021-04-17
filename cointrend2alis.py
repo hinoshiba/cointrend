@@ -10,7 +10,7 @@ from warrant.aws_srp import AWSSRP
 
 URL_BINANCE = 'https://api.binance.com/api/v3/exchangeInfo'
 
-SIZE_PRINT_LIMIT = 5
+SIZE_PRINT_LIMIT = 10
 doc_GOOGLE_TRENDS_URL = 'https://trends.google.co.jp/trends/explore?geo=JP&q='
 
 class alisClient:
