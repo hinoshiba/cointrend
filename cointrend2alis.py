@@ -1,5 +1,6 @@
 from pytrends.request import TrendReq
 import urllib.request
+import re
 import json
 import time
 import datetime
@@ -91,6 +92,10 @@ def GetBinanceList():
 
         ret_symbols = data['symbols']
         for symbol in ret_symbols:
+            name = symbol['baseAsset']
+            if len(re.findall('UP|DOWN|BEAR|BULL', name)) == 1:
+                if len(name) > 4:
+                    continue
             symbols.append(symbol['baseAsset'])
     except urllib.error.HTTPError as e:
         print('HTTPError: ', e, file=sys.stderr)
@@ -135,9 +140,9 @@ if __name__ == '__main__':
     cnt = 0
     doc_rank_trends = ''
     for trend in trends:
+        cnt+=1
         if SIZE_PRINT_LIMIT < cnt:
             break
-        cnt+=1
 
         doc_rank_trends += '<h3>第 ' + str(cnt) + ' 位: ' + trend['symbol']
         doc_rank_trends += '(<a href="' + doc_GOOGLE_TRENDS_URL + trend['symbol'] + '">Googleトレンドで見る</a>)</h3>'
@@ -169,7 +174,8 @@ if __name__ == '__main__':
 <p>その判断材料の1つとして、検索トレンドが利用できるかと思っています。</p>
 <p>例えば、2021/04/14 - 2021/04/15 に、IOST が急上昇したイベントがありました。<br> その1週間前までの <a href="https://trends.google.co.jp/trends/explore?date=2021-04-07%202021-04-14&geo=JP&q=IOST">2021/04/07 - 2021/04/14 をGoogleトレンドで検索</a> していただくとわかるように、注目度が上がっていることがわかります。</p>
 <p>このことからも、検索トレンドが情報している暗号資産名は、今後動きのある通貨である可能性を判断する材料の1つとして使えることがわかると思います。</p>
-<p>上がりそうなトレンドに乗るもよし、まだ注目が集まっていない"トレンドに値がなかった通貨名" に目を光らせておくのもよし。色々な思考材料に使えるのかと、個人的には夢を膨らませています</p>
+<p>上がりそうなトレンドに乗るもよし、まだ注目が集まっていない"トレンドに値がなかった通貨名" に目を光らせておくのもよし。色々な思考材料に使えるのかと、個人的には夢を膨らませています。</p>
+<h3>今回のレポートは以上です。</h3>
 
     """
     title = "暗号資産トレンド: " + t_str_et + "までの推移"
