@@ -116,7 +116,7 @@ if __name__ == '__main__':
     for symbol in GetBinanceList():
         if cnt > DEBUG_LIMIT:
             break
-        cnt++
+        cnt+=1
 
         trend = GetGoogleTrend(symbol, t_7days_ago, t_end)
         if len(trend['rates']) < 1:
