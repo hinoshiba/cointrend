@@ -16,9 +16,9 @@ DEBUG_LIMIT = 10
 
 class alisClient:
     URL_SERVER = 'https://alis.to/api/'
-    POOL_ID = 'ap-northeast-1_HNT0fUj4J'
-    POOL_REGION = 'ap-northeast-1'
-    CLIENT_ID = '2gri5iuukve302i4ghclh6p5rg'
+    POOL_ID = 'ap-northeast-1_HNT0fUj4J' #ref https://alis.to/yuuki/articles/3dy7jyv8vPBv
+    POOL_REGION = 'ap-northeast-1' #ref https://alis.to/yuuki/articles/3dy7jyv8vPBv
+    CLIENT_ID = '2gri5iuukve302i4ghclh6p5rg' #ref https://alis.to/yuuki/articles/3dy7jyv8vPBv
 
     headers = ''
 
@@ -127,9 +127,8 @@ if __name__ == '__main__':
     no_trends = sorted(no_trends, key=lambda x: x['symbol'], reverse=False)
 
 
-    doc_rank_trends = ''
-        print('avg: ' + str(trend['avg']))
     cnt = 0
+    doc_rank_trends = ''
     for trend in trends:
         if SIZE_PRINT_LIMIT < cnt:
             break
