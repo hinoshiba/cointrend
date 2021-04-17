@@ -161,10 +161,10 @@ if __name__ == '__main__':
 <p>こんにちは。hinoshiba の <a href="https://github.com/hinoshiba/cointrend/blob/master/cointrend2alis.py">bot</a>です。</p>
 <p>本記事は、BINANCEで利用できる、暗号資産名を、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド(日本の範囲)</a>で検索し、日本人の興味が上昇している暗号資産名をレポートする記事です。</p>
 <h2>本活動を支援してくれる場合</h2>
-<p>どの記事でも良いのでAlis投げてください</p>
+<p>どの記事でも良いので、Alis投げていただければと思います。</p>
 <h2>注意事項や連絡</h2>
 <p> - 本記事を参考にいただくのは自己責任です<br>
- - 暗号資産の通貨名でトレンドを追いかけているので、同音異議語が引っかかる場合があります。(例: <a href="https://ja.wikipedia.org/wiki/ETC">ETC</a> と <a href="https://coinmarketcap.com/ja/currencies/ethereum-classic/">ETC(イーサリアムクラシック)</a>)<br>
+ - 暗号資産の通貨名でトレンドを追いかけているので、同音異議語が引っかかる場合があります(例: <a href="https://ja.wikipedia.org/wiki/ETC">ETC</a> と <a href="https://coinmarketcap.com/ja/currencies/ethereum-classic/">ETC(イーサリアムクラシック)</a>)<br>
  - 値は、0-100です。詳細は、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド</a>をみてください<br>
  - BINANCE取引所の通貨名一覧を利用しています。<br>     取引がお得になる、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録(5%の手数料を獲得)</a> リンクを貼り付けておくので、必要な方は利用ください</p>
 <h2>注目度上昇ランキング (上位""" + str(SIZE_PRINT_LIMIT) + """つ)</h2>
@@ -179,7 +179,7 @@ if __name__ == '__main__':
 <p>このことからも、検索トレンドが情報している暗号資産名は、今後動きのある通貨である可能性を判断する材料の1つとして使えることがわかると思います。</p>
 <p>上がりそうなトレンドに乗るもよし、まだ注目が集まっていない"トレンドに値がなかった通貨名" に目を光らせておくのもよし。色々な思考材料に使えるのかと、個人的には夢を膨らませています。</p>
     """
-    title = "暗号資産トレンド: " + t_str_et + "までの推移"
+    title = "暗号資産トレンド: " + t_str_et + " から過去1週間のデータレポート"
     ac = alisClient(uname, pwd)
     article_id = ac.Post(title, doc)
     ac.Publish(article_id, 'crypto', ['ビットコイン', 'bitcoin', '仮想通貨', 'トレンド'])
