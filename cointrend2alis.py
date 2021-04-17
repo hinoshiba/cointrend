@@ -12,8 +12,6 @@ URL_BINANCE = 'https://api.binance.com/api/v3/exchangeInfo'
 SIZE_PRINT_LIMIT = 5
 doc_GOOGLE_TRENDS_URL = 'https://trends.google.co.jp/trends/explore?geo=JP&q='
 
-DEBUG_LIMIT = 10
-
 class alisClient:
     URL_SERVER = 'https://alis.to/api/'
     POOL_ID = 'ap-northeast-1_HNT0fUj4J' #ref https://alis.to/yuuki/articles/3dy7jyv8vPBv
@@ -50,7 +48,10 @@ class alisClient:
         time.sleep(1)
         request = urllib.request.Request(url, data=data, method=method, headers=self.headers)
         with urllib.request.urlopen(request) as response:
-            return json.load(response)
+            try:
+                return json.load(response)
+            except:
+                return
 
 def die(msg):
     print(msg, file=sys.stderr)
@@ -112,13 +113,17 @@ if __name__ == '__main__':
 
     trends = []
     no_trends = []
+
+    b_symbols = GetBinanceList()
     cnt = 0
-    for symbol in GetBinanceList():
-        if cnt > DEBUG_LIMIT:
-            break
+    size = len(b_symbols)
+    for symbol in b_symbols:
         cnt+=1
 
+        print('WIP ' + str(cnt) + ' / ' + str(size))
         trend = GetGoogleTrend(symbol, t_7days_ago, t_end)
+        print(trend)
+
         if len(trend['rates']) < 1:
             no_trends.append(trend)
             continue
@@ -155,9 +160,9 @@ if __name__ == '__main__':
 <h2>注意事項や連絡</h2>
 <p> - 本記事を参考にいただくのは自己責任です<br>
  - 値は、0-100です。詳細は、<a href="https://trends.google.co.jp/trends/?geo=JP">Googleトレンド</a>をみてください<br>
- - BINANCE取引所から一覧を取得しています。対象通貨を活用する場合、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録し 5%の手数料を獲得</a>をしてみてください</p>
+ - BINANCE取引所の通貨名一覧を利用しています。<br>     取引がお得になる、<a href="https://www.binance.com/ja/register?ref=XV62ZYI2">BINANCEへ登録(5%の手数料を獲得)</a> リンクを貼り付けておくので、必要な方は利用ください</p>
 <h2>注目度上昇ランキング (上位""" + str(SIZE_PRINT_LIMIT) + """つ)</h2>
-<p>今回の記事では、<strong>""" + t_str_st + """から""" + t_str_et + """の間</strong>に、日本で上昇した暗号資産名をレポートしています</p>""" + doc_rank_trends + """
+<p>今回の記事では、 「""" + t_str_st + """から""" + t_str_et + """の間」 に、<br>日本で上昇した暗号資産名をレポートしています</p>""" + doc_rank_trends + """
 <h3>トレンド に値がなかった通貨名</h3>""" + doc_no_trends + """
 <h2>トレンドには意味があるのか。</h2>
 <p>暗号資産の取引も、多数決ゲームと言われることがあるように、世間の注目度を追いかけることも大切です。</p>
@@ -167,10 +172,7 @@ if __name__ == '__main__':
 <p>上がりそうなトレンドに乗るもよし、まだ注目が集まっていない"トレンドに値がなかった通貨名" に目を光らせておくのもよし。色々な思考材料に使えるのかと、個人的には夢を膨らませています</p>
 
     """
-    title = "[テスト記事] 暗号資産トレンドレポート: " + t_str_et + "までの推移"
+    title = "暗号資産トレンド: " + t_str_et + "までの推移"
     ac = alisClient(uname, pwd)
     article_id = ac.Post(title, doc)
-    print(article_id)
     ac.Publish(article_id, 'crypto', ['ビットコイン', 'bitcoin', '仮想通貨', 'トレンド'])
-
-
